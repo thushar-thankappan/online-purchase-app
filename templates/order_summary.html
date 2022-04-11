@@ -1,0 +1,121 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block content %}
+<style>
+  .small-img{
+    width: 70px;
+    height: 70px;
+  }
+</style>
+<main class="mt-5 pt-4">
+  <div class="container">
+    <section class="mb-4">
+      {% if order.items.all %}
+
+      <h1>Order summary</h1>
+      <div class="table-responsive text-nowrap">
+        
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Item title</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Price</th>
+              <th scope="col">Total Item Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order_item in order.items.all %}
+              <tr>
+              <th scope="row">
+                <img src="{{order_item.item.image.url}}" class="rounded small-img" alt="">
+              </th>
+              <td>{{order_item.item.title}}</td>
+              <td>
+                <a href="{{order_item.item.get_remove_single_from_cart_url}}">
+                  <i class="fas fa-minus-circle mr-2"></i>
+                </a>
+                {{order_item.quantity}}
+                 <a href="{{order_item.item.get_add_to_cart_url}}">
+                  <i class="fas fa-plus-circle ml-2"></i>
+                </a>
+              </td>
+              {% if order_item.item.discount_price %}
+                <td>{{order_item.item.discount_price}}</td>
+              {% else %}
+                <td>{{order_item.item.price}}</td>
+              {% endif %}
+              <td>{{order_item.get_final_price}}
+                {% if order_item.item.discount_price %}
+                  <span class="badge badge-pill badge-info">{{order_item.get_amount_saved}}</span>
+                {% endif %}
+                <a href="{{order_item.item.get_remove_from_cart_url}}">
+                  <span style="color: red;" class="float-right">
+                    <i class="fas fa-trash-alt"></i>
+                  </span>
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+              <tr>
+                <td colspan="5">
+                  <a href="{% url 'home' %}" class="btn btn-outline-primary float-right">Continue Shopping</a>
+                </td>
+              </tr>
+            {% endfor %}
+            
+            {% if order.get_total %}
+              <tr>
+                <td colspan="4">
+                  <h4>Order total</h4>
+                </td>
+                <td colspan="1">
+                  Rs{{order.get_total}}
+                </td>
+              </tr>
+              <tr>
+                <td colspan="5">
+                  <a href="{% url 'checkout' %}" class="btn btn-outline-warning float-right ml-2">Prodeed to checkout</a>
+                  <a href="{% url 'home' %}" class="btn btn-outline-primary float-right">Continue Shopping</a>
+                </td>
+              </tr>
+            {% endif %}
+
+          </tbody>
+        </table>
+        {% else %}
+
+        <h4 class="mt-5 pt-4">No items in your cart</h4>
+        <a href="{% url 'home' %}" class="btn btn-outline-primary">Continue Shopping</a>
+        {% endif %}
+
+      </div>
+    </section>
+  </div>
+</main>
+
+<div class="container-fluid mx-auto">
+  <div class="row d-flex justify-content-center wow fadeIn">
+    <div class="col-md-6 text-center">
+      <h4 class="my-4 h4">Additional information</h4>
+      <p>
+        Shopping Plaza, CENTRAL OUTLET, an adaptation of the historical marketplace, with accommodation made for automobiles. Central Outlet is a collection of independent retail stores, services, and a parking area conceived, constructed, and maintained by a management firm as a unit, also contain restaurants, banks, theatres, professional offices, service stations, and other establishments.
+      </p>
+    </div>
+  </div>
+  <div class="row wow fadeIn">
+    <div class="col-lg-4 col-md-12 mb-4">
+      <!-- <img src="static\images\static\images\gt1.jpg" class="img-fluid" alt=""> -->
+      <img src="{% static 'images/static/images/gt1.jpg' %}" style="height: 250px;" class="img-fluid" alt="">
+    </div>
+    <div class="col-lg-4 col-md-6 mb-4">
+      <img src="{% static 'images/static/images/clock2.jpg' %}" style="height: 250px;" class="img-fluid" alt="">
+    </div>
+    <div class="col-lg-4 col-md-6 mb-4">
+      <img src="{% static 'images/static/images/cookware1.jpg' %}" style="height: 250px;" class="img-fluid" alt="">
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
